@@ -1,15 +1,15 @@
-# AngularJS generator [![Build Status](https://secure.travis-ci.org/yeoman/generator-angular.png?branch=master)](http://travis-ci.org/yeoman/generator-angular)
+# AngularJS generator (under construction)
 
-Maintainer: [Brian Ford](https://github.com/btford)
+Maintainer: [Shai Reznik](https://github.com/shairez)
 
-Based on [angular-seed](https://github.com/angular/angular-seed/)
+Based on [generator-angular](https://github.com/yeoman/generator-angular/)
 
 
 ## Usage
 
-Install `generator-angular`:
+Install `generator-enterprise-angular`:
 ```
-npm install -g generator-angular
+npm install -g generator-enterprise-angular
 ```
 
 Make a new directory, and `cd` into it:
@@ -19,7 +19,7 @@ mkdir my-new-project && cd $_
 
 Run `yo angular`, optionally passing an app name:
 ```
-yo angular [app-name]
+yo enterprise-angular [app-name]
 ```
 
 Run `grunt` for building and `grunt serve` for preview
