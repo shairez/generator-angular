@@ -1,4 +1,4 @@
-# AngularJS generator (under construction)
+# AngularJS Enterprise generator (under construction)
 
 Maintainer: [Shai Reznik](https://github.com/shairez)
 
