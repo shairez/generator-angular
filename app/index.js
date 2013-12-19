@@ -25,7 +25,7 @@ var Generator = module.exports = function Generator(args, options) {
     try {
       this.env.options.appPath = require(path.join(process.cwd(), 'bower.json')).appPath;
     } catch (e) {}
-    this.env.options.appPath = this.env.options.appPath || 'app';
+    this.env.options.appPath = this.env.options.appPath || 'src';
   }
 
   this.appPath = this.env.options.appPath;
@@ -53,15 +53,15 @@ var Generator = module.exports = function Generator(args, options) {
     args.push('--minsafe');
   }
 
-  this.hookFor('angular:common', {
+  this.hookFor('angular-enterprise:common', {
     args: args
   });
 
-  this.hookFor('angular:main', {
+  this.hookFor('angular-enterprise:main', {
     args: args
   });
 
-  this.hookFor('angular:controller', {
+  this.hookFor('angular-enterprise:controller', {
     args: args
   });
 
@@ -83,7 +83,7 @@ var Generator = module.exports = function Generator(args, options) {
     }
 
     if (this.routeModule) {
-      enabledComponents.push('angular-route/angular-route.js');
+      enabledComponents.push('angular-ui-router/release/angular-ui-router.js');
     }
 
     this.invoke('karma:app', {
@@ -149,7 +149,7 @@ Generator.prototype.askForModules = function askForModules() {
       checked: true
     }, {
       value: 'routeModule',
-      name: 'angular-route.js',
+      name: 'angular-ui-router.js',
       checked: true
     }]
   }];
@@ -174,7 +174,7 @@ Generator.prototype.askForModules = function askForModules() {
       angMods.push("'ngSanitize'");
     }
     if (this.routeModule) {
-      angMods.push("'ngRoute'");
+      angMods.push("'ui.router'");
     }
 
     if (angMods.length) {
@@ -197,16 +197,16 @@ Generator.prototype.bootstrapFiles = function bootstrapFiles() {
 
   if (this.bootstrap && !sass) {
     files.push('bootstrap.css');
-    this.copy('fonts/glyphicons-halflings-regular.eot', 'app/fonts/glyphicons-halflings-regular.eot');
-    this.copy('fonts/glyphicons-halflings-regular.ttf', 'app/fonts/glyphicons-halflings-regular.ttf');
-    this.copy('fonts/glyphicons-halflings-regular.svg', 'app/fonts/glyphicons-halflings-regular.svg');
-    this.copy('fonts/glyphicons-halflings-regular.woff', 'app/fonts/glyphicons-halflings-regular.woff');
+    this.copy('fonts/glyphicons-halflings-regular.eot', this.env.options.appPath + '/fonts/glyphicons-halflings-regular.eot');
+    this.copy('fonts/glyphicons-halflings-regular.ttf', this.env.options.appPath + '/fonts/glyphicons-halflings-regular.ttf');
+    this.copy('fonts/glyphicons-halflings-regular.svg', this.env.options.appPath + '/fonts/glyphicons-halflings-regular.svg');
+    this.copy('fonts/glyphicons-halflings-regular.woff', this.env.options.appPath + '/fonts/glyphicons-halflings-regular.woff');
   }
 
   files.push('main.' + (sass ? 's' : '') + 'css');
 
   files.forEach(function (file) {
-    this.copy(source + file, 'app/styles/' + file);
+    this.copy(source + file, 'src/styles/' + file);
   }.bind(this));
 
   this.indexFile = this.appendFiles({
@@ -216,7 +216,7 @@ Generator.prototype.bootstrapFiles = function bootstrapFiles() {
     sourceFileList: files.map(function (file) {
       return 'styles/' + file.replace('.scss', '.css');
     }),
-    searchPath: ['.tmp', 'app']
+    searchPath: ['.tmp', 'src']
   });
 };
 
@@ -257,7 +257,7 @@ Generator.prototype.extraModules = function extraModules() {
   }
 
   if (this.routeModule) {
-    modules.push('bower_components/angular-route/angular-route.js');
+    modules.push('bower_components/angular-ui-router/release/angular-ui-router.js');
   }
 
   if (modules.length) {
@@ -272,7 +272,7 @@ Generator.prototype.appJs = function appJs() {
     fileType: 'js',
     optimizedPath: 'scripts/scripts.js',
     sourceFileList: ['scripts/app.js', 'scripts/controllers/main.js'],
-    searchPath: ['.tmp', 'app']
+    searchPath: ['.tmp', 'src']
   });
 };
 
@@ -289,5 +289,5 @@ Generator.prototype.packageFiles = function () {
 
 Generator.prototype.imageFiles = function () {
   this.sourceRoot(path.join(__dirname, 'templates'));
-  this.directory('images', 'app/images', true);
+  this.directory('images', 'src/assets/images', true);
 }

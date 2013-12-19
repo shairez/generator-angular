@@ -19,7 +19,8 @@ Generator.prototype.createControllerFiles = function createControllerFiles() {
   this.generateSourceAndTest(
     'controller',
     'spec/controller',
-    'controllers',
-    this.options['skip-add'] || false
+    'core',
+    this.options['skip-add'] || false,
+    'controller'
   );
 };

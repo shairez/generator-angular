@@ -53,6 +53,16 @@ var Generator = module.exports = function Generator() {
 
   var sourceRoot = '/templates/javascript';
   this.scriptSuffix = '.js';
+  this.typeSuffixes = {
+      controller: "ctrl",
+      service: "srv",
+      directive: "drv",
+      constant: "cnst",
+      value: "val",
+      template: "tpl",
+      module: "mdl",
+      test: "test"
+  };
 
   if (this.env.options.coffee) {
     sourceRoot = '/templates/coffeescript';
@@ -78,7 +88,7 @@ Generator.prototype.appTemplate = function (src, dest) {
 Generator.prototype.testTemplate = function (src, dest) {
   yeoman.generators.Base.prototype.template.apply(this, [
     src + this.scriptSuffix,
-    path.join(this.env.options.testPath, dest) + this.scriptSuffix
+    path.join(this.env.options.appPath, dest) + this.scriptSuffix
   ]);
 };
 
@@ -105,10 +115,19 @@ Generator.prototype.addScriptToIndex = function (script) {
   }
 };
 
-Generator.prototype.generateSourceAndTest = function (appTemplate, testTemplate, targetDirectory, skipAdd) {
-  this.appTemplate(appTemplate, path.join('scripts', targetDirectory, this.name));
-  this.testTemplate(testTemplate, path.join(targetDirectory, this.name));
-  if (!skipAdd) {
-    this.addScriptToIndex(path.join(targetDirectory, this.name));
+Generator.prototype.generateSourceAndTest = function (appTemplate, testTemplate, targetDirectory, skipAdd, componentType) {
+  var typeSuffix = "";
+  if (componentType){
+      var chosenSuffix = this.typeSuffixes[componentType];
+      if (chosenSuffix){
+          typeSuffix = chosenSuffix;
+      }
   }
+  var filename = this.name + "." + typeSuffix;
+  this.appTemplate(appTemplate, path.join('scripts', targetDirectory, filename));
+  var testFilename = filename + "." + this.typeSuffixes['test'];
+  this.testTemplate(testTemplate, path.join('scripts', targetDirectory, testFilename));
+//  if (!skipAdd) {
+//    this.addScriptToIndex(path.join(targetDirectory, this.name));
+//  }
 };

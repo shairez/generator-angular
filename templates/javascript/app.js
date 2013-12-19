@@ -1,13 +1,11 @@
 'use strict';
 
 angular.module('<%= scriptAppName %>', [<%= angularModules %>])
-  .config(function ($routeProvider) {
-    $routeProvider
-      .when('/', {
-        templateUrl: 'views/main.html',
+  .config(function ($stateProvider) {
+    $stateProvider
+      .state('main', {
+        url: "/",
+        templateUrl: 'scripts/main/main.tpl.html',
         controller: 'MainCtrl'
-      })
-      .otherwise({
-        redirectTo: '/'
       });
   });
