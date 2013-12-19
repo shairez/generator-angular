@@ -122,7 +122,7 @@ Generator.prototype.generateSourceAndTest = function (appTemplate, testTemplate,
       if (chosenSuffix){
           typeSuffix = chosenSuffix;
       }
-  }
+  } 
   var filename = this.name + "." + typeSuffix;
   this.appTemplate(appTemplate, path.join('scripts', targetDirectory, filename));
   var testFilename = filename + "." + this.typeSuffixes['test'];
