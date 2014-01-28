@@ -1,6 +1,6 @@
-$icon-font-path: "/bower_components/sass-bootstrap/fonts/";
-
+@import 'app-vars';
 @import 'sass-bootstrap/lib/bootstrap';
+@import 'concat-styles';
 
 .browsehappy {
     margin: 0.2em 0;

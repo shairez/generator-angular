@@ -5,7 +5,7 @@ angular.module('<%= scriptAppName %>', [<%= angularModules %>])
     $stateProvider
       .state('main', {
         url: "/",
-        templateUrl: 'scripts/main/main.tpl.html',
-        controller: 'MainCtrl'
+        templateUrl: 'scripts/core/main/main.tpl.html',
+        controller: ''<%= scriptAppName %>'.core.main.MainCtrl'
       });
   });

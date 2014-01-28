@@ -15,15 +15,47 @@ var Generator = module.exports = function Generator() {
   this.appname = this._.slugify(this._.humanize(this.appname));
   this.scriptAppName = this._.camelize(this.appname) + angularUtils.appName(this);
 
-  this.cameledName = this._.camelize(this.name);
-  this.classedName = this._.classify(this.name);
+    // TODO: Handle package names - seperate dot and turn into camelCase (preserve last module name in dir structure)
 
-  if (typeof this.env.options.appPath === 'undefined') {
-    try {
-      this.env.options.appPath = require(path.join(process.cwd(), 'bower.json')).appPath;
-    } catch (e) {}
-    this.env.options.appPath = this.env.options.appPath || 'app';
-  }
+
+	if (typeof this.env.options.appPath === 'undefined') {
+		try {
+			this.env.options.appPath = require(path.join(process.cwd(), 'bower.json')).appPath;
+		} catch (e) {}
+		this.env.options.appPath = this.env.options.appPath || 'src';
+	}
+
+
+	this.createFilePath= function(packagesString){
+		var currentPath = process.cwd(),
+			appPath = this.env.options.appPath,
+			appPathStringLength = appPath.length,
+			appPathIndex = currentPath.indexOf(appPath);
+
+		if (appPathIndex === -1 ||
+			(appPathIndex + appPathStringLength) === currentPath.length ){
+			return packagesString.replace(".", path.sep);
+		}else{
+			var scriptsFolder = "scripts",
+				indexToCutFrom = currentPath.indexOf(scriptsFolder) + scriptsFolder.length + 1;
+
+			return currentPath.slice(indexToCutFrom, currentPath.length)
+		}
+	}
+
+    this.classifyNames = function (){
+        var str = this.name;
+        var lastIndex = str.lastIndexOf(".") + 1;
+        var packages = str.substring(0, lastIndex);
+	    this.componentFilePath = this.createFilePath(packages);
+        this.classedComponentName = this._.classify(str.substring(lastIndex, str.length));
+        this.classedName = packages + this.classedComponentName;
+    }
+
+  this.cameledName = this._.camelize(this.name);
+  this.classifyNames();
+
+
 
   if (typeof this.env.options.testPath === 'undefined') {
     try {
@@ -69,6 +101,7 @@ var Generator = module.exports = function Generator() {
     this.scriptSuffix = '.coffee';
   }
 
+    this.env.options.minsafe = true;
   if (this.env.options.minsafe) {
     sourceRoot += '-min';
   }
@@ -122,10 +155,12 @@ Generator.prototype.generateSourceAndTest = function (appTemplate, testTemplate,
       if (chosenSuffix){
           typeSuffix = chosenSuffix;
       }
-  } 
-  var filename = this.name + "." + typeSuffix;
-  this.appTemplate(appTemplate, path.join('scripts', targetDirectory, filename));
-  var testFilename = filename + "." + this.typeSuffixes['test'];
+  }
+  var filepath = this.name.replace(".", "/");
+  filepath += "." + typeSuffix;
+
+  this.appTemplate(appTemplate, path.join('scripts', targetDirectory, filepath));
+  var testFilename = filepath + "." + this.typeSuffixes['test'];
   this.testTemplate(testTemplate, path.join('scripts', targetDirectory, testFilename));
 //  if (!skipAdd) {
 //    this.addScriptToIndex(path.join(targetDirectory, this.name));

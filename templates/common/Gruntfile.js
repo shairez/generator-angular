@@ -37,10 +37,11 @@ module.exports = function (grunt) {
         tasks: ['newer:coffee:test', 'karma']
       },<% } else { %>
       js: {
-        files: ['!<%%= yeoman.app %>/scripts/**/*.test.js',
-                '!<%%= yeoman.app %>/scripts/**/*.mock.js',
-                '<%%= yeoman.app %>/scripts/**/*.js'],
-        tasks: ['newer:jshint:all', 'concat:server']
+        files: ['<%%= yeoman.app %>/scripts/**/*.js',
+                '!<%%= yeoman.app %>/scripts/**/*.test.js',
+                '!<%%= yeoman.app %>/scripts/**/*.mock.js'
+                ],
+        tasks: ['concat:server']
       },
       jsTest: {
         files: ['test/spec/{,*/}*.js'],

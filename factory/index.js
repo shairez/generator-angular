@@ -13,7 +13,9 @@ Generator.prototype.createServiceFiles = function createServiceFiles() {
   this.generateSourceAndTest(
     'service/factory',
     'spec/service',
-    'services',
+	this.componentFilePath,
     this.options['skip-add'] || false
   );
+
+
 };

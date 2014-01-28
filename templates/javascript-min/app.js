@@ -1,11 +1,13 @@
 'use strict';
 
 angular.module('<%= scriptAppName %>', [<%= angularModules %>])
-  .config(['$stateProvider', function ($stateProvider) {
+  .config(['$stateProvider', "$urlRouterProvider", function ($stateProvider, $urlRouterProvider) {
     $stateProvider
       .state('main', {
         url: "/",
-        templateUrl: 'scripts/main/main.tpl.html',
-        controller: 'MainCtrl'
+        templateUrl: 'scripts/core/main/main.tpl.html',
+        controller: '<%= scriptAppName %>.core.main.MainCtrl'
       });
+
+      $urlRouterProvider.otherwise("/");
   }]);

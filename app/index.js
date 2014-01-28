@@ -19,7 +19,7 @@ var Generator = module.exports = function Generator(args, options) {
   });
   this.scriptAppName = this.appname + angularUtils.appName(this);
 
-  args = ['main'];
+  args = ['main.main'];
 
   if (typeof this.env.options.appPath === 'undefined') {
     try {
@@ -53,15 +53,15 @@ var Generator = module.exports = function Generator(args, options) {
     args.push('--minsafe');
   }
 
-  this.hookFor('angular-enterprise:common', {
+  this.hookFor('ngprise:common', {
     args: args
   });
 
-  this.hookFor('angular-enterprise:main', {
+  this.hookFor('ngprise:main', {
     args: args
   });
 
-  this.hookFor('angular-enterprise:controller', {
+  this.hookFor('ngprise:controller', {
     args: args
   });
 
@@ -271,7 +271,7 @@ Generator.prototype.appJs = function appJs() {
     html: this.indexFile,
     fileType: 'js',
     optimizedPath: 'scripts/scripts.js',
-    sourceFileList: ['scripts/app.js', 'scripts/controllers/main.js'],
+    sourceFileList: ['scripts/scripts.js'],
     searchPath: ['.tmp', 'src']
   });
 };
