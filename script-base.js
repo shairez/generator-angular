@@ -3,6 +3,7 @@ var util = require('util');
 var path = require('path');
 var yeoman = require('yeoman-generator');
 var angularUtils = require('./util.js');
+var fs = require("fs");
 
 var Generator = module.exports = function Generator() {
   yeoman.generators.NamedBase.apply(this, arguments);
@@ -13,7 +14,7 @@ var Generator = module.exports = function Generator() {
     this.appname = path.basename(process.cwd());
   }
   this.appname = this._.slugify(this._.humanize(this.appname));
-  this.scriptAppName = this._.camelize(this.appname) + angularUtils.appName(this);
+
 
     // TODO: Handle package names - seperate dot and turn into camelCase (preserve last module name in dir structure)
 
@@ -34,8 +35,10 @@ var Generator = module.exports = function Generator() {
 
 		if (appPathIndex === -1 ||
 			(appPathIndex + appPathStringLength) === currentPath.length ){
-			return packagesString.replace(".", path.sep);
+			var filepath = packagesString.replace(/\./g, path.sep);
+			return this._.dasherize(filepath);
 		}else{
+
 			var scriptsFolder = "scripts",
 				indexToCutFrom = currentPath.indexOf(scriptsFolder) + scriptsFolder.length + 1;
 
@@ -43,17 +46,42 @@ var Generator = module.exports = function Generator() {
 		}
 	}
 
-    this.classifyNames = function (){
+	this.createModuleName = function(pathString){
+		var that = this;
+		fs.readdir(pathString, function(err, files){
+			if (!err){
+				
+				files.forEach(function(file){
+					if (file.indexOf(".mdl.js") !== -1){
+						//this.scriptAppName = 
+						return;
+					}
+				});
+			}else{
+				console.log("error in reading directory", err);
+			}
+			var parentDir = pathString.slice(0, pathString.lastIndexOf(path.sep));
+			console.log("parentDir", parentDir);
+		//	that.createModuleName(parentDir);
+		})
+	}
+
+    this.createClassifyNames = function (){
         var str = this.name;
-        var lastIndex = str.lastIndexOf(".") + 1;
+        var lastIndex = str.lastIndexOf(".");
         var packages = str.substring(0, lastIndex);
 	    this.componentFilePath = this.createFilePath(packages);
         this.classedComponentName = this._.classify(str.substring(lastIndex, str.length));
-        this.classedName = packages + this.classedComponentName;
+        this.classedName = packages + "." + this.classedComponentName;
+//	    this.scriptAppName = this._.camelize(this.appname) + angularUtils.appName(this);
+	    var filePath = "src"+path.sep+"scripts"+path.sep+packages.replace(/\./g, path.sep);
+	    this.createModuleName(filePath);
+
+	    console.log("this.scriptAppName", this.scriptAppName);
     }
 
   this.cameledName = this._.camelize(this.name);
-  this.classifyNames();
+  this.createClassifyNames();
 
 
 
@@ -88,6 +116,7 @@ var Generator = module.exports = function Generator() {
   this.typeSuffixes = {
       controller: "ctrl",
       service: "srv",
+	  factory: "srv",
       directive: "drv",
       constant: "cnst",
       value: "val",
@@ -156,12 +185,13 @@ Generator.prototype.generateSourceAndTest = function (appTemplate, testTemplate,
           typeSuffix = chosenSuffix;
       }
   }
-  var filepath = this.name.replace(".", "/");
-  filepath += "." + typeSuffix;
+  var filename = this.name.slice(this.name.lastIndexOf(".")+1, this.name.length);
+	filename = this._.dasherize(filename);
+	filename += "." + typeSuffix;
 
-  this.appTemplate(appTemplate, path.join('scripts', targetDirectory, filepath));
-  var testFilename = filepath + "." + this.typeSuffixes['test'];
-  this.testTemplate(testTemplate, path.join('scripts', targetDirectory, testFilename));
+//  this.appTemplate(appTemplate, path.join('scripts', targetDirectory, filename));
+  var testFilename = filename + "." + this.typeSuffixes['test'];
+//  this.testTemplate(testTemplate, path.join('scripts', targetDirectory, testFilename));
 //  if (!skipAdd) {
 //    this.addScriptToIndex(path.join(targetDirectory, this.name));
 //  }
