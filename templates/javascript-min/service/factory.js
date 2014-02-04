@@ -1,6 +1,6 @@
 'use strict';
 
-angular.module('<%= scriptAppName %>')
+angular.module('<%= componentModuleName %>')
   .factory('<%= classedName %>', [function() {
     // Service logic
     // ...
